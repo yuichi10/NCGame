@@ -101,7 +101,7 @@ bool BoradView::checkFinish()
     }
     //cross line
     three_line[6] = BoradStatus[0][0]*BoradStatus[1][1]*BoradStatus[2][2];
-    three_line[7] = BoradStatus[0][2]*BoradStatus[1][1]*BoradStatus[2][1];
+    three_line[7] = BoradStatus[0][2]*BoradStatus[1][1]*BoradStatus[2][0];
     
     //if it not fill it be 0
     int fill_counter = 1;

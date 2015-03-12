@@ -70,9 +70,7 @@ void Computer::findTwoLine(int* putV)
      0:width 1      3:height 1    6:cross right
      1:width 2      4:height 2    7:cross left
      2:width 3      5:height 6
-     
-     
-     */
+    */
     int three_line[8] = {0};
     int three_line_place[8][2] = {0};
     //width and height
@@ -95,6 +93,7 @@ void Computer::findTwoLine(int* putV)
                 space_h = i*10+j;
             }
         }
+        // if the line have more than 2 piece
         if(count_w > 1){
             three_line_place[i][0] = space_w;
         }else {
@@ -106,6 +105,7 @@ void Computer::findTwoLine(int* putV)
             three_line_place[i+3][0] = 0;
         }
     }
+    //if the line have more than 2 piece and if the 2 piece are same
     for(int i = 0;i < 6;i++){
         if(three_line_place[i][0] != 0 && three_line_place[i][1] == computerTurn*2){
             int x = three_line_place[i][0] / 10;
@@ -117,12 +117,52 @@ void Computer::findTwoLine(int* putV)
             std::cout << putV+y*3+x  << std::endl;
             *(putV+y*3+x) += lose_value;
         }
-  //      std::cout << three_line_place[i][0] << ":0" << std::endl;
-  //      std::cout << three_line_place[i][1] << std::endl;
     }
     
     //cross line
     three_line[6] = borad_status[0][0]*borad_status[1][1]*borad_status[2][2];
     three_line[7] = borad_status[0][2]*borad_status[1][1]*borad_status[2][0];
+    //right cross
+    if(borad_status[0][0] == borad_status[1][1]){
+        if(borad_status[0][0] == computerTurn){
+            *(putV+2*3+2) += win_value;
+        }else if(borad_status[0][0] == playerTurn){
+            *(putV+2*3+2) += lose_value;
+        }
+    }else if(borad_status[2][2] == borad_status[1][1]){
+        if(borad_status[1][1] == computerTurn){
+            *(putV) += win_value;
+        }else if(borad_status[1][1] == playerTurn){
+            *(putV) += lose_value;
+        }
+    }else if(borad_status[0][0] == borad_status[2][2]){
+        if(borad_status[0][0] == computerTurn){
+            *(putV+1*3+1) += win_value;
+        }else if(borad_status[0][0] == playerTurn){
+            *(putV+1*3+1) += lose_value;
+        }
+    }
+    
+    //left cross
+    if(borad_status[0][2] == borad_status[1][1]){
+        if(borad_status[0][2] == computerTurn){
+            *(putV+0*3+2) += win_value;
+        }else if(borad_status[0][2] == playerTurn){
+            *(putV+0*3+2) += lose_value;
+        }
+    }else if(borad_status[2][0] == borad_status[1][1]){
+        if(borad_status[1][1] == computerTurn){
+            *(putV+2*3+0) += win_value;
+        }else if(borad_status[1][1] == playerTurn){
+            *(putV+2*3+0) += lose_value;
+        }
+    }else if(borad_status[2][0] == borad_status[0][2]){
+        if(borad_status[2][0] == computerTurn){
+            *(putV+1*3+1) += win_value;
+        }else if(borad_status[2][0] == playerTurn){
+            *(putV+1*3+1) += lose_value;
+        }
+    }
+
     
 }
