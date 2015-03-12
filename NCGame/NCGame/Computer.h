@@ -10,5 +10,28 @@
 #define __NCGame__Computer__
 
 #include <stdio.h>
+class GameManeger;
 
+class Computer
+{
+public:
+    Computer();
+    //borad value for place/
+    const int borad_value[3][3] = {3,2,3,2,5,2,3,2,3};
+    //boradStatus
+    int borad_status[5][5];
+    //computer's number
+    int computerTurn = 0;
+    //start computer thinking
+    int comptuerPut();
+    
+    //caluculate the value
+    void calValue(int* putV);
+    GameManeger* game_maneger;
+    
+    //find continue of 2 computer num
+    void findTwoLine();
+    //find most big point
+    int findPutPlace(int* putV);
+};
 #endif /* defined(__NCGame__Computer__) */

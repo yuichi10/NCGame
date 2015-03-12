@@ -9,11 +9,12 @@
 #include <iostream>
 #include "GameManeger.h"
 #include "BoradView.h"
+#include "Computer.h"
 
 void GameManeger::startGame()
 {
     boradView = new BoradView();
-    boradView->initBoradStatus();
+    computer = new Computer();
     decideAhead();
     boradView->showBorad();
     putSection();
@@ -42,10 +43,18 @@ void GameManeger::putSection()
             playerPut();
             nowPlayer = computerTurn;
         }else {
-            playerPut();
+            computerPut();
             nowPlayer = playerTurn;
         }
         boradView->showBorad();
+    }
+    
+    if(winner == playerTurn){
+        std::cout << "Player Win" << std::endl;
+    }else if(winner == computerTurn){
+        std::cout << "Computer Win" << std::endl;
+    }else if(winner == DRAW){
+        std::cout << "Draw" << std::endl;
     }
 }
 
@@ -58,7 +67,33 @@ void GameManeger::playerPut()
         std::cout << "if put 12 -> x:1 y:2, 32 -> x:3 y:2\n";
         std::cout << "Your turn Please input(xy): ";
         std::cin >> putPlace;
-    }while(!boradView->canPut(putPlace/10, putPlace%10));
+    }while(!canPut(putPlace/10, putPlace%10));
     boradView->putPiece(putPlace/10, putPlace%10);
+}
+
+void GameManeger::getBoradStatus(int* bd)
+{
+    int* cBoardStatus = boradView->getBoradPointer();
+    for(int i=0;i < BORADSIZE;i++){
+        for (int j=0; j < BORADSIZE; j++) {
+            *(bd+i*BORADSIZE+j) = *(cBoardStatus+i*BORADSIZE+j);
+        }
+    }
+}
+
+void GameManeger::computerPut()
+{
+    int xy = computer->comptuerPut();
+    boradView->putPiece(xy/10, xy%10);
+}
+
+bool GameManeger::canPut(int x, int y)
+{
+    return boradView->canPut(x, y);
+}
+
+void GameManeger::getWinner(int win)
+{
+    winner = win;
 }
 

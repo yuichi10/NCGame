@@ -25,10 +25,13 @@ public:
     static const int WALL = 99;
     //Nothing there
     static const int SPACE = 0;
+    int AHEAD_WIN = 1;
+    int LAST_WIN = 8;
+    
     //game maneger
     GameManeger* game_maneger;
     //the status of Borad
-    int BoradStatus[BORADSIZE][BORADSIZE];
+
     
     //AHEAD player's symbol
     std::string AHEAD_VIEW = "●";
@@ -47,7 +50,10 @@ public:
     void putPiece(int x, int y);
     //checkFinish
     bool checkFinish();
-    
+    //send the pointer of BoradStatus
+    int* getBoradPointer();
+private:
+    int BoradStatus[BORADSIZE][BORADSIZE];
 };
 
 #endif /* defined(__NCGame__BoradView__) */

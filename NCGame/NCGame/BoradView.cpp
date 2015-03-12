@@ -15,6 +15,13 @@
 BoradView::BoradView()
 {
     game_maneger = GameManeger::getInstance();
+    //Finish value
+    AHEAD_WIN = game_maneger->AHEAD*game_maneger->AHEAD*game_maneger->AHEAD;
+    LAST_WIN = game_maneger->LAST*game_maneger->LAST*game_maneger->LAST;
+    game_maneger->SPACE = SPACE;
+    game_maneger->WALL = WALL;
+    game_maneger->BORADSIZE = BORADSIZE;
+    initBoradStatus();
 }
 
 //initialisation of BoradStatus
@@ -85,11 +92,50 @@ bool BoradView::canPut(int x, int y)
 
 bool BoradView::checkFinish()
 {
+    //the data of 3 line
+    int three_line[8];
+    for(int i = 0; i < 8;i++){
+        three_line[i] = 1;
+    }
+    //width and height
+    for (int i = 1; i < BORADSIZE-1; i++) {
+        for (int j = 1;  j< BORADSIZE-1; j++) {
+            three_line[i-1] *= BoradStatus[i][j];
+            three_line[i+2] *= BoradStatus[j][i];
+        }
+    }
+    //cross line
+    three_line[6] = BoradStatus[1][1]*BoradStatus[2][2]*BoradStatus[3][3];
+    three_line[7] = BoradStatus[1][3]*BoradStatus[2][2]*BoradStatus[3][1];
+    
+    //if it not fill it be 0
+    int fill_counter = 1;
+    for(int i=0;i < 8;i++){
+        if(three_line[i] == AHEAD_WIN || three_line[i] == LAST_WIN){
+            if(three_line[i] == AHEAD_WIN){
+                game_maneger->getWinner(game_maneger->AHEAD);
+            }else {
+                game_maneger->getWinner(game_maneger->LAST);
+            }
+            return true;
+        }
+        fill_counter *= three_line[i];
+    }
+    
+    if(fill_counter > 0){
+        game_maneger->getWinner(game_maneger->DRAW);
+        return true;
+    }
     return false;
 }
 
 void BoradView::putPiece(int x, int y){
     BoradStatus[y][x] = game_maneger->nowPlayer;
+}
+
+int* BoradView::getBoradPointer()
+{
+    return BoradStatus[0];
 }
 
 
