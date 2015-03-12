@@ -20,9 +20,7 @@ public:
     BoradView();
     ~BoradView();
     //Borad size
-    static const int BORADSIZE = 5;
-    //Borad around
-    static const int WALL = 99;
+    static const int BORADSIZE = 3;
     //Nothing there
     static const int SPACE = 0;
     int AHEAD_WIN = 1;

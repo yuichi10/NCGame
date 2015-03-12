@@ -29,9 +29,7 @@ public:
     //number space
     int SPACE = 0;
     //number borad
-    int BORADSIZE = 5;
-    //wall number
-    int WALL = 99;
+    int BORADSIZE = 3;
     //Player's turn
     int playerTurn = 0;
     //computer's turn

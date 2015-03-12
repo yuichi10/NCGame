@@ -67,8 +67,8 @@ void GameManeger::playerPut()
         std::cout << "if put 12 -> x:1 y:2, 32 -> x:3 y:2\n";
         std::cout << "Your turn Please input(xy): ";
         std::cin >> putPlace;
-    }while(!canPut(putPlace/10, putPlace%10));
-    boradView->putPiece(putPlace/10, putPlace%10);
+    }while(!canPut(putPlace/10-1, putPlace%10-1));
+    boradView->putPiece(putPlace/10-1, putPlace%10-1);
 }
 
 void GameManeger::getBoradStatus(int* bd)

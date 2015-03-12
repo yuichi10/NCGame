@@ -19,7 +19,7 @@ public:
     //borad value for place/
     const int borad_value[3][3] = {3,2,3,2,5,2,3,2,3};
     //boradStatus
-    int borad_status[5][5];
+    int borad_status[3][3];
     //computer's number
     int computerTurn = 0;
     //start computer thinking
