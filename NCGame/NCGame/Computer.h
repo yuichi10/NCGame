@@ -22,6 +22,8 @@ public:
     int borad_status[3][3];
     //computer's number
     int computerTurn = 0;
+    //player's turn
+    int playerTurn = 0;
     //start computer thinking
     int comptuerPut();
     
@@ -30,7 +32,7 @@ public:
     GameManeger* game_maneger;
     
     //find continue of 2 computer num
-    void findTwoLine();
+    void findTwoLine(int* putV);
     //find most big point
     int findPutPlace(int* putV);
 };

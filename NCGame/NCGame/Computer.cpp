@@ -13,14 +13,17 @@
 Computer::Computer()
 {
     game_maneger = GameManeger::getInstance();
-    computerTurn = game_maneger->computerTurn;
 }
 
 int Computer::comptuerPut()
 {
     //computer's thikning value of the place
     int put_value[3][3] = {0};
+    computerTurn = game_maneger->computerTurn;
+    playerTurn = game_maneger->playerTurn;
+
     game_maneger->getBoradStatus(borad_status[0]);
+    std::cout << put_value[0] << std::endl;
     calValue(put_value[0]);
     return findPutPlace(put_value[0]);
 }
@@ -36,7 +39,7 @@ void Computer::calValue(int* putV)
         }
     }
     //find the place which can win
-    findTwoLine();
+    findTwoLine(putV);
 }
 
 
@@ -58,7 +61,7 @@ int Computer::findPutPlace(int* putV)
     return (x*10+y);
 }
 
-void Computer::findTwoLine()
+void Computer::findTwoLine(int* putV)
 {
     const int win_value  = 30;
     const int lose_value = 20;
@@ -104,7 +107,18 @@ void Computer::findTwoLine()
         }
     }
     for(int i = 0;i < 6;i++){
-        std::cout << three_line_place[i][0] << std::endl;
+        if(three_line_place[i][0] != 0 && three_line_place[i][1] == computerTurn*2){
+            int x = three_line_place[i][0] / 10;
+            int y = three_line_place[i][0] % 10;
+            *(putV+y*3+x) += win_value;
+        }else if(three_line_place[i][0] != 0 && three_line_place[i][1] == playerTurn*2){
+            int x = three_line_place[i][0] / 10;
+            int y = three_line_place[i][0] % 10;
+            std::cout << putV+y*3+x  << std::endl;
+            *(putV+y*3+x) += lose_value;
+        }
+  //      std::cout << three_line_place[i][0] << ":0" << std::endl;
+  //      std::cout << three_line_place[i][1] << std::endl;
     }
     
     //cross line
