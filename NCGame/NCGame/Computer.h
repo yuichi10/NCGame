@@ -18,22 +18,37 @@ public:
     Computer();
     //borad value for place/
     const int borad_value[3][3] = {3,2,3,2,5,2,3,2,3};
+    static const int WINVALUE  = 80;
+    static const int LOSEVALUE = 50;
+    static const int WINDOUBLE = 30;
+
+    //computer's thikning value of the place
+    int put_value[3][3] = {0};
     //boradStatus
     int borad_status[3][3];
+    //next borad status
+    int nBorad_status[3][3];
+    
     //computer's number
     int computerTurn = 0;
     //player's turn
     int playerTurn = 0;
+    
     //start computer thinking
     int comptuerPut();
+    void thinkNext();
     
     //caluculate the value
-    void calValue(int* putV);
+    void calValue();
     GameManeger* game_maneger;
     
     //find continue of 2 computer num
-    void findTwoLine(int* putV);
+    void findTwoLine();
     //find most big point
-    int findPutPlace(int* putV);
+    int findPutPlace();
+    //copy borad status
+    void copyBoradStatus(int* nBorad, int* fBorad);
+    //find double two line
+    bool findDoubleTwoline(int turn, int* borad);
 };
 #endif /* defined(__NCGame__Computer__) */

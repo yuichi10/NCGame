@@ -116,7 +116,7 @@ bool BoradView::checkFinish()
         }
         fill_counter *= three_line[i];
     }
-    
+    //research it is full or not
     if(fill_counter > 0){
         game_maneger->getWinner(game_maneger->DRAW);
         return true;
@@ -124,10 +124,12 @@ bool BoradView::checkFinish()
     return false;
 }
 
+//put piece
 void BoradView::putPiece(int x, int y){
     BoradStatus[y][x] = game_maneger->nowPlayer;
 }
 
+//get Borad Status 
 int* BoradView::getBoradPointer()
 {
     return BoradStatus[0];

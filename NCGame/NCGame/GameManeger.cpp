@@ -49,6 +49,7 @@ void GameManeger::putSection()
         boradView->showBorad();
     }
     
+    //if finish
     if(winner == playerTurn){
         std::cout << "Player Win" << std::endl;
     }else if(winner == computerTurn){
@@ -71,6 +72,7 @@ void GameManeger::playerPut()
     boradView->putPiece(putPlace/10-1, putPlace%10-1);
 }
 
+//give borad status(use difference address)
 void GameManeger::getBoradStatus(int* bd)
 {
     int* cBoardStatus = boradView->getBoradPointer();
@@ -81,17 +83,20 @@ void GameManeger::getBoradStatus(int* bd)
     }
 }
 
+//turn of computer
 void GameManeger::computerPut()
 {
     int xy = computer->comptuerPut();
     boradView->putPiece(xy/10, xy%10);
 }
 
+//ask borad class can put or not
 bool GameManeger::canPut(int x, int y)
 {
     return boradView->canPut(x, y);
 }
 
+//decide winner
 void GameManeger::getWinner(int win)
 {
     winner = win;

@@ -15,44 +15,53 @@ Computer::Computer()
     game_maneger = GameManeger::getInstance();
 }
 
+//start computer thinking
 int Computer::comptuerPut()
 {
-    //computer's thikning value of the place
-    int put_value[3][3] = {0};
     computerTurn = game_maneger->computerTurn;
     playerTurn = game_maneger->playerTurn;
 
     game_maneger->getBoradStatus(borad_status[0]);
-    std::cout << put_value[0] << std::endl;
-    calValue(put_value[0]);
-    return findPutPlace(put_value[0]);
+    calValue();
+    return findPutPlace();
 }
 
-void Computer::calValue(int* putV)
+//calculate the point (highest point is the place to put)
+void Computer::calValue()
 {
     //add borad value
     for(int i = 0;i < 3;i++){
         for(int j = 0;j < 3;j++){
             if(game_maneger->canPut(i,j)){
-                *(putV+j*3+i) = borad_value[j][i];
+                put_value[j][i] = borad_value[j][i];
+            }else {
+                put_value[j][i] = 0;
             }
         }
     }
     //find the place which can win
-    findTwoLine(putV);
+    findTwoLine();
+    if(findPutPlace() < LOSEVALUE){
+        thinkNext();
+    }
 }
 
 
 //find the most biggest value and return xy (2,3)->23 
-int Computer::findPutPlace(int* putV)
+int Computer::findPutPlace()
 {
     int max = -1;
     int x = 0;
     int y = 0;
     for(int i = 0;i < 3;i++){
         for(int j = 0;j < 3;j++){
-            if(max < *(putV+j*3+i) && game_maneger->canPut(i, j)){
+           /* if(max < *(putV+j*3+i) && game_maneger->canPut(i, j)){
                 max = *(putV+j*3+i);
+                x = i;
+                y = j;
+            }*/
+            if(max < put_value[j][i] && game_maneger->canPut(i, j)){
+                max = put_value[j][i];
                 x = i;
                 y = j;
             }
@@ -61,10 +70,8 @@ int Computer::findPutPlace(int* putV)
     return (x*10+y);
 }
 
-void Computer::findTwoLine(int* putV)
+void Computer::findTwoLine()
 {
-    const int win_value  = 30;
-    const int lose_value = 20;
     /*
      three_line
      0:width 1      3:height 1    6:cross right
@@ -72,14 +79,17 @@ void Computer::findTwoLine(int* putV)
      2:width 3      5:height 6
     */
     int three_line[8] = {0};
+    //threeline[][0]->put the place to put  threeline[][1]->the amount of borad status
+    //if count==2 && [][1] == 2 -> there is 1 double count==2 && [][1]==4 there are 2 double
     int three_line_place[8][2] = {0};
     //width and height
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < game_maneger->BORADSIZE; i++) {
         int count_w = 0;
         int space_w = 0;
         int count_h = 0;
         int space_h = 0;
-        for (int j = 0;j < 3; j++) {
+        //add value of borad status
+        for (int j = 0;j < game_maneger->BORADSIZE; j++) {
             if(borad_status[i][j] != game_maneger->SPACE){
                 count_w += 1;
                 three_line_place[i][1] += borad_status[i][j];
@@ -110,12 +120,11 @@ void Computer::findTwoLine(int* putV)
         if(three_line_place[i][0] != 0 && three_line_place[i][1] == computerTurn*2){
             int x = three_line_place[i][0] / 10;
             int y = three_line_place[i][0] % 10;
-            *(putV+y*3+x) += win_value;
+            put_value[y][x] += WINVALUE;
         }else if(three_line_place[i][0] != 0 && three_line_place[i][1] == playerTurn*2){
             int x = three_line_place[i][0] / 10;
             int y = three_line_place[i][0] % 10;
-            std::cout << putV+y*3+x  << std::endl;
-            *(putV+y*3+x) += lose_value;
+            put_value[y][x] += LOSEVALUE;
         }
     }
     
@@ -125,44 +134,100 @@ void Computer::findTwoLine(int* putV)
     //right cross
     if(borad_status[0][0] == borad_status[1][1]){
         if(borad_status[0][0] == computerTurn){
-            *(putV+2*3+2) += win_value;
+            put_value[2][2] += WINVALUE;
         }else if(borad_status[0][0] == playerTurn){
-            *(putV+2*3+2) += lose_value;
+            put_value[2][2] += LOSEVALUE;
         }
     }else if(borad_status[2][2] == borad_status[1][1]){
         if(borad_status[1][1] == computerTurn){
-            *(putV) += win_value;
+            put_value[0][0] += WINVALUE;
         }else if(borad_status[1][1] == playerTurn){
-            *(putV) += lose_value;
+            put_value[0][0] += LOSEVALUE;
         }
     }else if(borad_status[0][0] == borad_status[2][2]){
         if(borad_status[0][0] == computerTurn){
-            *(putV+1*3+1) += win_value;
+            put_value[1][1] += WINVALUE;
         }else if(borad_status[0][0] == playerTurn){
-            *(putV+1*3+1) += lose_value;
+            put_value[1][1] += LOSEVALUE;
         }
     }
     
     //left cross
     if(borad_status[0][2] == borad_status[1][1]){
         if(borad_status[0][2] == computerTurn){
-            *(putV+0*3+2) += win_value;
+            put_value[0][2] += WINVALUE;
         }else if(borad_status[0][2] == playerTurn){
-            *(putV+0*3+2) += lose_value;
+            put_value[0][2] += LOSEVALUE;
         }
     }else if(borad_status[2][0] == borad_status[1][1]){
         if(borad_status[1][1] == computerTurn){
-            *(putV+2*3+0) += win_value;
+            put_value[2][0] += WINVALUE;
         }else if(borad_status[1][1] == playerTurn){
-            *(putV+2*3+0) += lose_value;
+            put_value[2][0] += LOSEVALUE;
         }
     }else if(borad_status[2][0] == borad_status[0][2]){
         if(borad_status[2][0] == computerTurn){
-            *(putV+1*3+1) += win_value;
+            put_value[1][1] += WINVALUE;
         }else if(borad_status[2][0] == playerTurn){
-            *(putV+1*3+1) += lose_value;
+            put_value[1][1] += LOSEVALUE;
         }
     }
+}
 
-    
+//computer think next borad status
+void Computer::thinkNext()
+{
+    for(int i=0;i<3;i++){
+        for(int j=0;j < 3;j++){
+            copyBoradStatus(nBorad_status[0], borad_status[0]);
+            if(put_value[i][j] > 0){
+                nBorad_status[i][j] = computerTurn;
+                if(findDoubleTwoline(computerTurn, nBorad_status[0])){
+                    put_value[i][j] += WINDOUBLE;
+                }
+            }
+        }
+    }
+}
+
+void Computer::copyBoradStatus(int* nBorad, int* fBorad){
+    for(int i=0;i < game_maneger->BORADSIZE;i++){
+        for(int j=0;j < game_maneger->BORADSIZE;j++){
+            *(nBorad+i*game_maneger->BORADSIZE+j) = *(fBorad+i*game_maneger->BORADSIZE+j);
+        }
+    }
+}
+
+bool Computer::findDoubleTwoline(int turn,int* borad)
+{
+    int two_line_count = 0;
+    for(int i=0; i < game_maneger->BORADSIZE; i++){
+        int count_turns_pieceH = 0;
+        int count_turns_pieceW = 0;
+        int count_zero_pieceH = 0;
+        int count_zero_pieceW = 0;
+        for(int j=0;j < game_maneger->BORADSIZE;j++){
+            if(*(borad+i*game_maneger->BORADSIZE+j) == turn){
+                count_turns_pieceW += 1;
+            }else if(*(borad+i*game_maneger->BORADSIZE+j) == game_maneger->SPACE){
+                count_zero_pieceW += 1;
+            }
+            
+            if(*(borad+j*game_maneger->BORADSIZE+i) == turn){
+                count_turns_pieceH += 1;
+            }else if(*(borad+j*game_maneger->BORADSIZE+i) == game_maneger->SPACE){
+                count_zero_pieceH = 1;
+            }
+        }
+        if(count_turns_pieceH == 2 && count_zero_pieceH == 1){
+            two_line_count += 1;
+        }
+        if(count_turns_pieceW == 2 && count_zero_pieceW == 1){
+            two_line_count += 1;
+        }
+        if(two_line_count >= 2){
+            return true;
+        }
+    }
+    return false;
 }
