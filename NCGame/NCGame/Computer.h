@@ -21,6 +21,7 @@ public:
     static const int WINVALUE  = 80;
     static const int LOSEVALUE = 50;
     static const int WINDOUBLE = 30;
+    static const int LOSEDOUBLE = 1;
 
     //computer's thikning value of the place
     int put_value[3][3] = {0};
@@ -28,6 +29,8 @@ public:
     int borad_status[3][3];
     //next borad status
     int nBorad_status[3][3];
+    //next and next borad status
+    int nnBorad_status[3][3];
     
     //computer's number
     int computerTurn = 0;
@@ -36,7 +39,7 @@ public:
     
     //start computer thinking
     int comptuerPut();
-    void thinkNext();
+    void thinkNext(int turn, int* nBorad, int* fBorad);
     
     //caluculate the value
     void calValue();
@@ -50,5 +53,7 @@ public:
     void copyBoradStatus(int* nBorad, int* fBorad);
     //find double two line
     bool findDoubleTwoline(int turn, int* borad);
+    //find max value
+    int findMaxValue();
 };
 #endif /* defined(__NCGame__Computer__) */
