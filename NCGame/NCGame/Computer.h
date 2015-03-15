@@ -37,6 +37,10 @@ public:
     //player's turn
     int playerTurn = 0;
     
+    //when computer put piece in first, to preseve rand number
+    int rRandNum = 0;
+    int lRandNum = 0;
+    
     //start computer thinking
     int comptuerPut();
     void thinkNext(int turn, int* nBorad, int* fBorad);
@@ -55,5 +59,7 @@ public:
     bool findDoubleTwoline(int turn, int* borad);
     //find max value
     int findMaxValue();
+    //make first turn borad value
+    void putFirstBoradValue();
 };
 #endif /* defined(__NCGame__Computer__) */
