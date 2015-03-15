@@ -38,11 +38,13 @@ void GameManeger::decideAhead()
 void GameManeger::putSection()
 {
     //it do untill finish
-    while(!boradView->checkFinish()){
+    while(!checkFinish()){
         if(nowPlayer == playerTurn){
+            turnCount += 1;
             playerPut();
             nowPlayer = computerTurn;
         }else {
+            turnCount += 1;
             computerPut();
             nowPlayer = playerTurn;
         }
@@ -81,6 +83,17 @@ void GameManeger::getBoradStatus(int* bd)
             *(bd+i*BORADSIZE+j) = *(cBoardStatus+i*BORADSIZE+j);
         }
     }
+}
+
+bool GameManeger::checkFinish()
+{
+    if(boradView->checkFinish()){
+        return true;
+    }else if(turnCount == 9){
+        std::cout << "Draw" << std::endl;
+        return true;
+    }
+    return false;
 }
 
 //turn of computer

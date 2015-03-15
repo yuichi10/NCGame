@@ -116,11 +116,13 @@ bool BoradView::checkFinish()
         }
         fill_counter *= three_line[i];
     }
+    /*
     //research it is full or not
     if(fill_counter > 0){
         game_maneger->getWinner(game_maneger->DRAW);
         return true;
     }
+     */
     return false;
 }
 

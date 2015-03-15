@@ -38,6 +38,8 @@ public:
     int nowPlayer = AHEAD;
     //who is winner
     void getWinner(int win);
+    //turn count
+    int turnCount = 0;
     //Borad view class
     BoradView* boradView;
     //Computer class
@@ -47,6 +49,8 @@ public:
     void startGame();
     //decide ahead
     void decideAhead();
+    //check finish
+    bool checkFinish();
     
     //put piece (start the game in real)
     void putSection();
