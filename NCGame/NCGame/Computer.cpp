@@ -80,8 +80,7 @@ void Computer::calValue()
         }
     }
     
-    
-    //find the place which can win
+    //find the place which can win and lose
     findTwoLine();
     //if next put do not have relationship with win or lose
     if(findMaxValue() < LOSEVALUE){
@@ -257,6 +256,7 @@ void Computer::findTwoLine()
 //computer think next borad status
 void Computer::thinkNext(int turn, int* nBorad, int* fBorad)
 {
+    //try to find the place which can make double two line
     for(int i=0;i<3;i++){
         for(int j=0;j < 3;j++){
             copyBoradStatus(nBorad, fBorad);
@@ -268,7 +268,7 @@ void Computer::thinkNext(int turn, int* nBorad, int* fBorad)
             }
         }
     }
-    //if max value < WINDOUBLE
+    //if max value < WINDOUBLE consider next player's put place
     if(findMaxValue() < WINDOUBLE){
         int oTurn = (turn == computerTurn) ? playerTurn : computerTurn;
         for(int i=0;i<3;i++){
