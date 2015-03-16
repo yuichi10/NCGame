@@ -17,11 +17,12 @@ class Computer
 public:
     Computer();
     //borad value for place/
-    int borad_value[3][3] = {3,2,3,2,6,2,3,2,3};
     static const int WINVALUE  = 80;
     static const int LOSEVALUE = 50;
     static const int WINDOUBLE = 30;
     static const int LOSEDOUBLE = 1;
+    //borad value for place
+    int borad_value[3][3] = {3,2,3,2,6,2,3,2,3};
 
     //computer's thikning value of the place
     int put_value[3][3] = {0};
@@ -36,6 +37,9 @@ public:
     int computerTurn = 0;
     //player's turn
     int playerTurn = 0;
+    
+    //if start from not middle flag
+    bool startFromDiagonal = false;
     
     //start computer thinking
     int comptuerPut();
@@ -57,5 +61,7 @@ public:
     int findMaxValue();
     //ajust borad value
     void ajustBoradValue();
+    //exception(when computer start and put 11(00) && player put 33(22) it is not good to put 22(11))
+    void exceptionOfPiece();
 };
 #endif /* defined(__NCGame__Computer__) */

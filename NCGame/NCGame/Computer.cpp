@@ -35,19 +35,20 @@ void Computer::ajustBoradValue()
     int lRandNum = 0;
     int _rRandNum = 0;
     int _lRandNum = 0;
-    if(game_maneger->turnCount == 1){
+     
+    if(computerTurn == game_maneger->AHEAD && game_maneger->turnCount == 1){
         srand((unsigned)time(NULL));
-        rRandNum = rand() % 5;
-        lRandNum = rand() % 5;
-    }
-    if(computerTurn == game_maneger->AHEAD){
+          rRandNum = rand() % 5;
+          lRandNum = rand() % 5;
         //if both of them over put_value[1][1], that is not good, so now use else if;
         if(borad_value[0][0] + rRandNum > borad_value[1][1]){
             borad_value[0][0] += rRandNum;
             borad_value[2][2] = borad_value[1][1] - 1;
+            startFromDiagonal = true;
         }else if(borad_value[0][2] + lRandNum > borad_value[1][1]){
             borad_value[0][2] += lRandNum;
             borad_value[2][0] = borad_value[1][1] - 1;
+            startFromDiagonal = true;
         }else{
             rRandNum = rand() % 3;
             lRandNum = rand() % 3;
@@ -57,6 +58,7 @@ void Computer::ajustBoradValue()
             borad_value[0][2] += lRandNum;
             borad_value[2][0] += _lRandNum;
             borad_value[2][2] += _rRandNum;
+            startFromDiagonal = false;
         }
     }
 }
@@ -64,6 +66,9 @@ void Computer::ajustBoradValue()
 //calculate the point (highest point is the place to put)
 void Computer::calValue()
 {
+    if(startFromDiagonal){
+        exceptionOfPiece();
+    }
     //add borad value
     for(int i = 0;i < 3;i++){
         for(int j = 0;j < 3;j++){
@@ -82,6 +87,30 @@ void Computer::calValue()
     if(findMaxValue() < LOSEVALUE){
         thinkNext(computerTurn, nBorad_status[0], borad_status[0]);
     }
+}
+
+void Computer::exceptionOfPiece()
+{
+    if(game_maneger->turnCount == 3 && borad_status[1][1] == game_maneger->SPACE){
+        if(borad_value[0][0] > borad_value[1][1]){
+            if(borad_status[2][2] == playerTurn){
+                borad_value[0][2] = borad_value[1][1] + 2;
+            }else if(borad_status[0][2] == playerTurn){
+                borad_value[2][0] = borad_value[1][1] + 1;
+            }else if(borad_status[2][0] == playerTurn){
+                borad_value[0][2] = borad_value[1][1] + 1;
+            }
+        }else if(borad_value[0][2] > borad_value[1][1]){
+            if(borad_status[2][0] == playerTurn){
+                borad_value[0][0] = borad_value[1][1] + 2;
+            }else if(borad_status[0][0] == playerTurn){
+                borad_value[2][2] = borad_value[1][1] + 1;
+            }else if(borad_status[2][2] == playerTurn){
+                borad_value[0][0] = borad_value[1][1] + 1;
+            }
+        }
+    }
+
 }
 
 
@@ -283,6 +312,31 @@ void Computer::copyBoradStatus(int* nBorad, int* fBorad){
 bool Computer::findDoubleTwoline(int turn,int* borad)
 {
     int two_line_count = 0;
+    
+    //right diagonal
+    if((*(borad))*(*(borad+1*game_maneger->BORADSIZE+1))*(*(borad+2*game_maneger->BORADSIZE+2)) == game_maneger->SPACE){
+        if(*(borad) == *(borad+1*game_maneger->BORADSIZE+1) && *(borad) == turn){
+            two_line_count += 1;
+        }else if(*(borad+1*game_maneger->BORADSIZE+1) == *(borad+2*game_maneger->BORADSIZE+2) &&*(borad+1*game_maneger->BORADSIZE+1) == turn){
+            two_line_count += 1;
+        }else if(*(borad+2*game_maneger->BORADSIZE+2) == *(borad) && *(borad+2*game_maneger->BORADSIZE+2) == turn){
+            two_line_count += 1;
+        }
+    }
+    
+    //left diagonal
+    if((*(borad+2))*(*(borad+1*game_maneger->BORADSIZE+1))*(*(borad+game_maneger->BORADSIZE*2)) == game_maneger->SPACE){
+        if(*(borad+2) == *(borad+1*game_maneger->BORADSIZE+1) && *(borad+2) == turn){
+            two_line_count += 1;
+        }else if(*(borad+1*game_maneger->BORADSIZE+1) == *(borad+game_maneger->BORADSIZE*2) && *(borad+1*game_maneger->BORADSIZE+1) == turn){
+            two_line_count += 1;
+        }else if(*(borad+game_maneger->BORADSIZE*2) == *(borad+2) && *(borad+game_maneger->BORADSIZE*2) == turn){
+            two_line_count += 1;
+        }
+    }
+
+    
+    //count width and height
     for(int i=0; i < game_maneger->BORADSIZE; i++){
         int count_turns_pieceH = 0;
         int count_turns_pieceW = 0;
