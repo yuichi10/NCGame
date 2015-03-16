@@ -24,8 +24,41 @@ int Computer::comptuerPut()
     playerTurn = game_maneger->playerTurn;
 
     game_maneger->getBoradStatus(borad_status[0]);
+    ajustBoradValue();
     calValue();
     return findPutPlace();
+}
+
+void Computer::ajustBoradValue()
+{
+    int rRandNum = 0;
+    int lRandNum = 0;
+    int _rRandNum = 0;
+    int _lRandNum = 0;
+    if(game_maneger->turnCount == 1){
+        srand((unsigned)time(NULL));
+        rRandNum = rand() % 5;
+        lRandNum = rand() % 5;
+    }
+    if(computerTurn == game_maneger->AHEAD){
+        //if both of them over put_value[1][1], that is not good, so now use else if;
+        if(borad_value[0][0] + rRandNum > borad_value[1][1]){
+            borad_value[0][0] += rRandNum;
+            borad_value[2][2] = borad_value[1][1] - 1;
+        }else if(borad_value[0][2] + lRandNum > borad_value[1][1]){
+            borad_value[0][2] += lRandNum;
+            borad_value[2][0] = borad_value[1][1] - 1;
+        }else{
+            rRandNum = rand() % 3;
+            lRandNum = rand() % 3;
+            _rRandNum = rand() % 3;
+            _lRandNum = rand() % 3;
+            borad_value[0][0] += rRandNum;
+            borad_value[0][2] += lRandNum;
+            borad_value[2][0] += _lRandNum;
+            borad_value[2][2] += _rRandNum;
+        }
+    }
 }
 
 //calculate the point (highest point is the place to put)
@@ -42,39 +75,12 @@ void Computer::calValue()
         }
     }
     
-    if(computerTurn == game_maneger->AHEAD){
-        putFirstBoradValue();
-        //if both of them over put_value[1][1], that is not good, so now use else if;
-        if(rRandNum+put_value[0][0] > put_value[1][1]){
-            if(game_maneger->canPut(0, 0)){
-                put_value[0][0] += rRandNum;
-            }
-            if(game_maneger->canPut(2, 2)){
-                put_value[2][2] = 4;
-            }
-        }else if(lRandNum+put_value[0][2] > put_value[1][1]){
-            if(game_maneger->canPut(2, 0)){
-                put_value[0][2] += lRandNum;
-            }
-            if(game_maneger->canPut(0, 2)){
-                put_value[2][0] = 4;
-            }
-        }
-    }
+    
     //find the place which can win
     findTwoLine();
     //if next put do not have relationship with win or lose
     if(findMaxValue() < LOSEVALUE){
         thinkNext(computerTurn, nBorad_status[0], borad_status[0]);
-    }
-}
-
-void Computer::putFirstBoradValue()
-{
-    if(game_maneger->turnCount == 1){
-        srand((unsigned)time(NULL));
-        rRandNum = rand() % 4;
-        lRandNum = rand() % 4;
     }
 }
 
