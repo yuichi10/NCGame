@@ -9,6 +9,8 @@
 #include <iostream>
 #include "GameManeger.h"
 int main(int argc, const char * argv[]) {
+    //get instance of gameManeger
     GameManeger* game_maneger = GameManeger::getInstance();
+    //game start
     game_maneger->startGame();
 }

@@ -14,6 +14,7 @@
 
 Computer::Computer()
 {
+    //get instance of GameManeger
     game_maneger = GameManeger::getInstance();
 }
 
@@ -22,10 +23,14 @@ int Computer::comptuerPut()
 {
     computerTurn = game_maneger->computerTurn;
     playerTurn = game_maneger->playerTurn;
-
+    
+    //get now status of borad
     game_maneger->getBoradStatus(borad_status[0]);
+    //ajust borad value
     ajustBoradValue();
+    //started to calculate of now borad value
     calValue();
+    //return place to put
     return findPutPlace();
 }
 
@@ -38,6 +43,7 @@ void Computer::ajustBoradValue()
      
     if(computerTurn == game_maneger->AHEAD && game_maneger->turnCount == 1){
         srand((unsigned)time(NULL));
+        //get rundom num to start without middle
           rRandNum = rand() % 5;
           lRandNum = rand() % 5;
         //if both of them over put_value[1][1], that is not good, so now use else if;
@@ -50,6 +56,7 @@ void Computer::ajustBoradValue()
             borad_value[2][0] = borad_value[1][1] - 1;
             startFromDiagonal = true;
         }else{
+            //if not start by diagonal, try to change diagonal value
             rRandNum = rand() % 3;
             lRandNum = rand() % 3;
             _rRandNum = rand() % 3;
@@ -66,10 +73,11 @@ void Computer::ajustBoradValue()
 //calculate the point (highest point is the place to put)
 void Computer::calValue()
 {
+    //if start from diagonal, in turn 3 computer should have to ajust borad value
     if(startFromDiagonal){
         exceptionOfPiece();
     }
-    //add borad value
+    //add borad value to put value
     for(int i = 0;i < 3;i++){
         for(int j = 0;j < 3;j++){
             if(game_maneger->canPut(i,j)){
@@ -90,6 +98,7 @@ void Computer::calValue()
 
 void Computer::exceptionOfPiece()
 {
+    //computer start first and in turn 3 && player do not put middle, need ajust borad value
     if(game_maneger->turnCount == 3 && borad_status[1][1] == game_maneger->SPACE){
         if(borad_value[0][0] > borad_value[1][1]){
             if(borad_status[2][2] == playerTurn){
@@ -119,13 +128,9 @@ int Computer::findPutPlace()
     int max = -99;
     int x = 0;
     int y = 0;
+    //put piece which have most biggest value in put_value
     for(int i = 0;i < 3;i++){
         for(int j = 0;j < 3;j++){
-           /* if(max < *(putV+j*3+i) && game_maneger->canPut(i, j)){
-                max = *(putV+j*3+i);
-                x = i;
-                y = j;
-            }*/
             if(max < put_value[j][i] && game_maneger->canPut(i, j)){
                 max = put_value[j][i];
                 x = i;
@@ -136,6 +141,7 @@ int Computer::findPutPlace()
     return (x*10+y);
 }
 
+//return most biggest value
 int Computer::findMaxValue()
 {
     int max = -99;
@@ -149,6 +155,7 @@ int Computer::findMaxValue()
     return max;
 }
 
+//try to find two line of computer and player. if find put extra value to put_value
 void Computer::findTwoLine()
 {
     /*
@@ -211,19 +218,19 @@ void Computer::findTwoLine()
     three_line[6] = borad_status[0][0]*borad_status[1][1]*borad_status[2][2];
     three_line[7] = borad_status[0][2]*borad_status[1][1]*borad_status[2][0];
     //right cross
-    if(borad_status[0][0] == borad_status[1][1]){
+    if(borad_status[0][0] == borad_status[1][1] && borad_status[2][2] == game_maneger->SPACE){
         if(borad_status[0][0] == computerTurn){
             put_value[2][2] += WINVALUE;
         }else if(borad_status[0][0] == playerTurn){
             put_value[2][2] += LOSEVALUE;
         }
-    }else if(borad_status[2][2] == borad_status[1][1]){
+    }else if(borad_status[2][2] == borad_status[1][1] && borad_status[0][0] == game_maneger->SPACE){
         if(borad_status[1][1] == computerTurn){
             put_value[0][0] += WINVALUE;
         }else if(borad_status[1][1] == playerTurn){
             put_value[0][0] += LOSEVALUE;
         }
-    }else if(borad_status[0][0] == borad_status[2][2]){
+    }else if(borad_status[0][0] == borad_status[2][2] && borad_status[1][1] == game_maneger->SPACE){
         if(borad_status[0][0] == computerTurn){
             put_value[1][1] += WINVALUE;
         }else if(borad_status[0][0] == playerTurn){
@@ -232,19 +239,19 @@ void Computer::findTwoLine()
     }
     
     //left cross
-    if(borad_status[0][2] == borad_status[1][1]){
+    if(borad_status[0][2] == borad_status[1][1] && borad_status[2][0] == game_maneger->SPACE){
         if(borad_status[0][2] == computerTurn){
             put_value[2][0] += WINVALUE;
         }else if(borad_status[0][2] == playerTurn){
             put_value[2][0] += LOSEVALUE;
         }
-    }else if(borad_status[2][0] == borad_status[1][1]){
+    }else if(borad_status[2][0] == borad_status[1][1] && borad_status[0][2] == game_maneger->SPACE){
         if(borad_status[1][1] == computerTurn){
             put_value[0][2] += WINVALUE;
         }else if(borad_status[1][1] == playerTurn){
             put_value[0][2] += LOSEVALUE;
         }
-    }else if(borad_status[2][0] == borad_status[0][2]){
+    }else if(borad_status[2][0] == borad_status[0][2] && borad_status[1][1] == game_maneger->SPACE){
         if(borad_status[2][0] == computerTurn){
             put_value[1][1] += WINVALUE;
         }else if(borad_status[2][0] == playerTurn){
@@ -270,6 +277,7 @@ void Computer::thinkNext(int turn, int* nBorad, int* fBorad)
     }
     //if max value < WINDOUBLE consider next player's put place
     if(findMaxValue() < WINDOUBLE){
+        //get opposit turn
         int oTurn = (turn == computerTurn) ? playerTurn : computerTurn;
         for(int i=0;i<3;i++){
             for(int j=0;j < 3;j++){
@@ -297,6 +305,7 @@ void Computer::thinkNext(int turn, int* nBorad, int* fBorad)
         }
     }
 }
+
 
 
 //copy one borad status to another one
@@ -336,7 +345,7 @@ bool Computer::findDoubleTwoline(int turn,int* borad)
     }
 
     
-    //count width and height
+    //count width and height of two line
     for(int i=0; i < game_maneger->BORADSIZE; i++){
         int count_turns_pieceH = 0;
         int count_turns_pieceW = 0;
@@ -361,9 +370,11 @@ bool Computer::findDoubleTwoline(int turn,int* borad)
         if(count_turns_pieceW == 2 && count_zero_pieceW == 1){
             two_line_count += 1;
         }
+        //if thre is double two line
         if(two_line_count >= 2){
             return true;
         }
     }
+    //if there is no double two line
     return false;
 }

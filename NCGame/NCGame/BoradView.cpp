@@ -14,6 +14,7 @@
 
 BoradView::BoradView()
 {
+    //get instance of gameManeger
     game_maneger = GameManeger::getInstance();
     //Finish value
     AHEAD_WIN = game_maneger->AHEAD*game_maneger->AHEAD*game_maneger->AHEAD;

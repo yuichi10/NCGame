@@ -23,6 +23,7 @@ void GameManeger::startGame()
 //decide who start
 void GameManeger::decideAhead()
 {
+    //the turn player choose
     int chooseTurn = 0;
     std::cout << "push number ber if ahead paly:" << AHEAD << " late play:" << LAST << std::endl;
     while (chooseTurn != AHEAD && chooseTurn != LAST){
@@ -31,6 +32,7 @@ void GameManeger::decideAhead()
     
     //decide player turn and comptuer turn
     playerTurn = chooseTurn;
+    //embeded opposit turn of player to computer
     computerTurn = (playerTurn == AHEAD) ? LAST : AHEAD;
 }
 
