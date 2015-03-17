@@ -44,21 +44,22 @@ public:
     //start computer thinking
     int comptuerPut();
     void thinkNext(int turn, int* nBorad, int* fBorad);
+    bool thinkNext2(int turn, int* nBorad, int*fBorad, int x, int y);
     
     //caluculate the value
     void calValue();
     GameManeger* game_maneger;
     
     //find continue of 2 computer num
-    void findTwoLine();
+    void findTwoLine(int turn, int* boradStatus, int* putValue);
     //find most big point
-    int findPutPlace();
+    int findPutPlace(int* putValue);
     //copy borad status
     void copyBoradStatus(int* nBorad, int* fBorad);
     //find double two line
     bool findDoubleTwoline(int turn, int* borad);
     //find max value
-    int findMaxValue();
+    int findMaxValue(int* putValue);
     //ajust borad value
     void ajustBoradValue();
     //exception(when computer start and put 11(00) && player put 33(22) it is not good to put 22(11))
